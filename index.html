@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Domain Expansion Hand VFX</title>
+  </head>
+  <body>
+    <div id="webcam-preview">
+      <video id="webcam" autoplay playsinline muted></video>
+      <canvas id="hand-debug-canvas"></canvas>
+    </div>
+
+    <canvas id="three-canvas"></canvas>
+    <div id="status">Loading hand tracking...</div>
+
+    <script type="module" src="/src/main.js"></script>
+
+    <div id="spell-text" class="spell-text hidden">
+      <div class="spell-sub">術式反転</div>
+      <div class="spell-main">「赫」</div>
+    </div>
+  </body>
+</html>
