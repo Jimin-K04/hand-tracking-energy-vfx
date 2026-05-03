@@ -227,7 +227,8 @@ function updateReactiveLayer(
   intensity,
   deltaTime,
   time,
-  absorption = 0
+  absorption = 0,
+  theme = 'red'
 ) {
   const positions = layer.positions;
   const basePositions = layer.basePositions;
@@ -237,9 +238,21 @@ function updateReactiveLayer(
   const seeds = layer.seeds;
   const absorbed = layer.absorbed;
 
-  const hotRed = new THREE.Color(0xff0f0f);
-  const hotGlow = new THREE.Color(0xff6a6a);
-  const whiteHot = new THREE.Color(0xfff0f0);
+  const hotRed =
+    theme === 'blue'
+      ? new THREE.Color(0x1f8cff)
+      : new THREE.Color(0xff0f0f);
+
+  const hotGlow =
+    theme === 'blue'
+      ? new THREE.Color(0x7ce8ff)
+      : new THREE.Color(0xff6a6a);
+
+  const whiteHot =
+    theme === 'blue'
+      ? new THREE.Color(0xeaffff)
+      : new THREE.Color(0xfff0f0);
+      
   const mixed = new THREE.Color();
 
   const captureRadius = 0.13;
@@ -543,6 +556,7 @@ export function createScene(canvas) {
     absorption: 0,
     visibility: 1,
     time: 0,
+    theme: 'red',
 
     setVisibility(visibility) {
       this.visibility = THREE.MathUtils.clamp(visibility, 0, 1);
@@ -550,6 +564,9 @@ export function createScene(canvas) {
 
     setAbsorption(absorption) {
       this.absorption = THREE.MathUtils.clamp(absorption, 0, 1);
+    },
+    setTheme(theme) {
+      this.theme = theme;
     },
 
     setSingularity(position, intensity) {
@@ -566,7 +583,8 @@ export function createScene(canvas) {
         this.intensity * 0.82,
         deltaTime,
         this.time,
-        this.absorption
+        this.absorption,
+        this.theme
       );
 
       updateReactiveLayer(
@@ -575,7 +593,8 @@ export function createScene(canvas) {
         this.intensity * 1.16,
         deltaTime,
         this.time,
-        this.absorption
+        this.absorption,
+        this.theme
       );
 
       updateReactiveLayer(
@@ -584,7 +603,8 @@ export function createScene(canvas) {
         this.intensity * 1.55,
         deltaTime,
         this.time,
-        this.absorption
+        this.absorption,
+        this.theme
       );
 
       this.nebulaGroup.rotation.y += deltaTime * 0.003;

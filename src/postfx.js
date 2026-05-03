@@ -1,3 +1,4 @@
+// src/postfx.js
 import * as THREE from 'three';
 import {
   EffectComposer,
@@ -7,10 +8,19 @@ import {
   VignetteEffect,
   ChromaticAberrationEffect,
 } from 'postprocessing';
+import { PinchDistortionEffect } from './effects/PinchDistortionEffect.js';
 
 export function createPostFX(renderer, scene, camera) {
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
+
+  const pinch = new PinchDistortionEffect();
+  pinch.setStrength(0);
+  pinch.setRadius(0.38);
+
+  // UV 변형 효과는 따로 분리
+  const distortionPass = new EffectPass(camera, pinch);
+  composer.addPass(distortionPass);
 
   const bloom = new BloomEffect({
     intensity: 1.15,
@@ -28,15 +38,15 @@ export function createPostFX(renderer, scene, camera) {
     offset: new THREE.Vector2(0.00012, 0.00012),
   });
 
-  const effectPass = new EffectPass(
+  const visualPass = new EffectPass(
     camera,
     bloom,
     vignette,
     chromatic
   );
 
-  effectPass.renderToScreen = true;
-  composer.addPass(effectPass);
+  visualPass.renderToScreen = true;
+  composer.addPass(visualPass);
 
   function resize() {
     composer.setSize(window.innerWidth, window.innerHeight);
@@ -45,5 +55,11 @@ export function createPostFX(renderer, scene, camera) {
   window.addEventListener('resize', resize);
   resize();
 
-  return { composer, bloom };
+  return {
+    composer,
+    bloom,
+    vignette,
+    chromatic,
+    pinch,
+  };
 }
